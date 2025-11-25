@@ -66,12 +66,10 @@ if __name__ == "__main__":
         print(f"  {i / numOfSongs * 100:.2f}% is done!\r", end="")
         i += 1
 
-    print(song_features)
     # add features as a column to csv file
     for feature in feature_names:
         df[feature] = song_features[feature]
     
-    print("df is set")
 
     # Save back to CSV
     df.to_csv("data.csv", index=False)
