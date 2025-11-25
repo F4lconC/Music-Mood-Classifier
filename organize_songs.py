@@ -1,9 +1,7 @@
 import os
-from posixpath import splitext
-import sys
 import csv
 from os import listdir
-from os.path import isfile, isdir, join, basename, dirname
+from os.path import isfile, isdir, join, basename, dirname, splitext
 
 def getMood(path):
     mood = basename(path).lower()
@@ -24,9 +22,9 @@ def renameFiles(path):
         with open('data.csv', 'a', newline='') as file:
             writer = csv.writer(file)
             for f in files:
-                ext = splitext(f)[1]
+                title, ext = splitext(f)
                 m, n = getMood(path)
-                writer.writerow([m + n, f, m])
+                writer.writerow([m + n, title, m])
                 os.rename(join(path, f), join(root, m + n + ext))
         return True
 
@@ -37,9 +35,9 @@ def mergeRename(path):
         with open('data.csv', 'a', newline='') as file:
             writer = csv.writer(file)
             for f in files:
-                ext = splitext(f)[1]
+                title, ext = splitext(f)
                 m, n = getMood(path)
-                writer.writerow([m + n, f, m])
+                writer.writerow([m + n, title, m])
                 os.rename(join(path, d, f), join(root, m + n + ext))
 
 def getDirs(path):
