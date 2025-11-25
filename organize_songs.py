@@ -15,7 +15,7 @@ def increment(name):
     return moods[name]
 
 def renameFiles(path):
-    files = [f for f in listdir(path) if isfile(join(path, f))]
+    files = sorted([f for f in listdir(path) if isfile(join(path, f))])
     if files == []:
         return False
     else:
@@ -31,7 +31,7 @@ def renameFiles(path):
 def mergeRename(path):
     dirs = getDirs(path)
     for d in dirs:
-        files = [f for f in listdir(join(path, d)) if isfile(join(path, d, f))]
+        files = sorted([f for f in listdir(join(path, d)) if isfile(join(path, d, f))])
         with open('data.csv', 'a', newline='') as file:
             writer = csv.writer(file)
             for f in files:
@@ -41,7 +41,7 @@ def mergeRename(path):
                 os.rename(join(path, d, f), join(root, m + n + ext))
 
 def getDirs(path):
-    dirs = [d for d in listdir(path) if isdir(join(path, d))]
+    dirs = sorted([d for d in listdir(path) if isdir(join(path, d))])
     return dirs
 
 def getPrevDir(path):
