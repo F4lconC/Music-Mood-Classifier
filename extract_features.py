@@ -2,7 +2,7 @@ import librosa
 import pandas as pd
 
 pitch_classes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
-feature_names = ['rms', 'zcr', 'spectral_centroid', 'spectral_rolloff', 'mfcc_1', 'mfcc_2', 'mfcc_3', 'mfcc_4', 'mfcc_5', 'mfcc_6', 'mfcc_7', 'mfcc_8', 'mfcc_9', 'mfcc_10', 'mfcc_11', 'mfcc_12', 'mfcc_13', 'chroma_C', 'chroma_C#', 'chroma_D', 'chroma_D#', 'chroma_E', 'chroma_F', 'chroma_F#', 'chroma_G', 'chroma_G#', 'chroma_A', 'chroma_A#', 'chroma_B']
+feature_names = ['rms', 'zcr', 'spectral_centroid', 'spectral_rolloff', 'mfcc_1', 'mfcc_2', 'mfcc_3', 'mfcc_4', 'mfcc_5', 'mfcc_6', 'mfcc_7', 'mfcc_8', 'mfcc_9', 'mfcc_10', 'mfcc_11', 'mfcc_12', 'mfcc_13', 'chroma_C', 'chroma_C#', 'chroma_D', 'chroma_D#', 'chroma_E', 'chroma_F', 'chroma_F#', 'chroma_G', 'chroma_G#', 'chroma_A', 'chroma_A#', 'chroma_B', 'bpm']
 
 def extract_features(y, sr):
     """
@@ -37,6 +37,10 @@ def extract_features(y, sr):
     for i, pitch_class in enumerate(pitch_classes):
         features[f'chroma_{pitch_class}'] = chroma[i].mean()
     
+    # BPM
+    bpm, beat_frames = librosa.beat.beat_track(y=y, sr=sr)
+    features['bpm'] = bpm
+
     return features
 
 
@@ -51,11 +55,11 @@ if __name__ == "__main__":
 
     songs = df["id"]
     numOfSongs = len(songs)
-    i = 0
+    count = 0
 
     for song in songs:
+        
         # Load File
-
         y, sr = librosa.load(f"./data/{song}.mp3")
 
         # Extract features from the audio file
@@ -63,8 +67,9 @@ if __name__ == "__main__":
 
         for key in audio_features.keys():
             song_features[key].append(audio_features[key])
+        
         print(f"  {i / numOfSongs * 100:.2f}% is done!\r", end="")
-        i += 1
+        count += 1
 
     # add features as a column to csv file
     for feature in feature_names:
