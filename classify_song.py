@@ -34,8 +34,17 @@ def cut_song_to_30_sec(file_path):
     """
         Takes the file path and creates a 30 second part with the same name and path
     """
-    
-    pass
+     from pydub import AudioSegment
+
+    audio = AudioSegment.from_file(file_path)
+    duration = len(audio)
+
+    if duration <= 30000:
+        return
+
+    start = (duration - 30000) // 2
+    clip = audio[start:start + 30000]
+    clip.export(file_path, format="mp3")
 
 def classify(features: dict):
     """
