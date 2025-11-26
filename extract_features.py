@@ -4,6 +4,10 @@ import pandas as pd
 pitch_classes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 feature_names = ['rms', 'zcr', 'spectral_centroid', 'spectral_rolloff', 'mfcc_1', 'mfcc_2', 'mfcc_3', 'mfcc_4', 'mfcc_5', 'mfcc_6', 'mfcc_7', 'mfcc_8', 'mfcc_9', 'mfcc_10', 'mfcc_11', 'mfcc_12', 'mfcc_13', 'chroma_C', 'chroma_C#', 'chroma_D', 'chroma_D#', 'chroma_E', 'chroma_F', 'chroma_F#', 'chroma_G', 'chroma_G#', 'chroma_A', 'chroma_A#', 'chroma_B', 'bpm']
 
+def load_file(file_path):
+    return librosa.load(file_path)
+
+
 def extract_features(y, sr):
     """
     Extract various audio features from an audio signal.
@@ -39,7 +43,7 @@ def extract_features(y, sr):
     
     # BPM
     bpm, beat_frames = librosa.beat.beat_track(y=y, sr=sr)
-    features['bpm'] = bpm
+    features['bpm'] = bpm[0]
 
     return features
 
@@ -60,7 +64,8 @@ if __name__ == "__main__":
     for song in songs:
         
         # Load File
-        y, sr = librosa.load(f"./data/{song}.mp3")
+        
+        y, sr = load_file(f"./data/{song}.mp3")
 
         # Extract features from the audio file
         audio_features = extract_features(y, sr)
