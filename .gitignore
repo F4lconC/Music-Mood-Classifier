@@ -1,4 +1,5 @@
 data/
+mel-spectograms/
 tmp
 venv
 __pycache__
