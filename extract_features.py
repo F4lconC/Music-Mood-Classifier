@@ -1,5 +1,6 @@
 import librosa
 import pandas as pd
+from os.path import join
 
 pitch_classes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B']
 feature_names = ['rms', 'zcr', 'spectral_centroid', 'spectral_rolloff', 'mfcc_1', 'mfcc_2', 'mfcc_3', 'mfcc_4', 'mfcc_5', 'mfcc_6', 'mfcc_7', 'mfcc_8', 'mfcc_9', 'mfcc_10', 'mfcc_11', 'mfcc_12', 'mfcc_13', 'chroma_C', 'chroma_C#', 'chroma_D', 'chroma_D#', 'chroma_E', 'chroma_F', 'chroma_F#', 'chroma_G', 'chroma_G#', 'chroma_A', 'chroma_A#', 'chroma_B', 'bpm']
@@ -59,13 +60,12 @@ if __name__ == "__main__":
 
     songs = df["id"]
     numOfSongs = len(songs)
-    count = 0
+    count = 1
 
     for song in songs:
         
         # Load File
-        
-        y, sr = load_file(f"./data/{song}.mp3")
+        y, sr = load_file(join("data", f"{song}.mp3"))
 
         # Extract features from the audio file
         audio_features = extract_features(y, sr)
@@ -73,13 +73,12 @@ if __name__ == "__main__":
         for key in audio_features.keys():
             song_features[key].append(audio_features[key])
         
-        print(f"  {i / numOfSongs * 100:.2f}% is done!\r", end="")
+        print(f"  {count / numOfSongs * 100:.2f}% is done!\r", end="")
         count += 1
 
     # add features as a column to csv file
     for feature in feature_names:
         df[feature] = song_features[feature]
     
-
     # Save back to CSV
     df.to_csv("data.csv", index=False)
