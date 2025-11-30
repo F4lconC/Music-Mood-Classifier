@@ -1,5 +1,6 @@
+__pycache__/
+.ipynb_checkpoints/
 data/
 mel-spectograms/
-tmp
-venv
-__pycache__
+tmp/
+venv/
