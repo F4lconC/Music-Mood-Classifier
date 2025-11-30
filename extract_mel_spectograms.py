@@ -1,18 +1,34 @@
-import librosa
-import cv2
-import pandas as pd
-import numpy as np
-from os.path import join
 from os import makedirs
+from os.path import join
+import re
+
+import cv2
+import librosa
+import numpy as np
+import pandas as pd
+
+
+def get_mood(id):
+    mood = re.match(r"[a-zA-Z]+", id).group()
+    return mood
+
+
+def make_mood_dirs(moods):
+    for mood in moods:
+        makedirs(join(save_dir, mood), exist_ok=True)
+
 
 df = pd.read_csv("data.csv")
-
 songs = df["id"]
+
 numOfSongs = len(songs)
 count = 1
 
 save_dir = "mel-spectograms"
+moods = ["angry", "happy", "relaxed", "sad"]
+
 makedirs(save_dir, exist_ok=True)
+make_mood_dirs(moods)
 
 for song in songs:
     
@@ -30,7 +46,7 @@ for song in songs:
     img = (cv2.resize(S_norm, (128, 128)) * 128).astype(np.uint8)
 
     # Save the image
-    cv2.imwrite(join(save_dir, f"{song}.png"), img)
+    cv2.imwrite(join(save_dir, get_mood(song), f"{song}.png"), img)
 
     print(f"Progress: {count / numOfSongs * 100:.2f}%\r", end="")
     count += 1
