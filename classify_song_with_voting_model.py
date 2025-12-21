@@ -2,7 +2,7 @@ import os
 import joblib
 import yt_dlp
 import pandas as pd
-from extract_features import extract_features, load_file, feature_names
+from dataset_creation_organization_codes.audio_utils import extract_features, load_audio, feature_names
 from sklearn.model_selection import GridSearchCV, train_test_split
 
 
@@ -26,6 +26,7 @@ def download_song(query):
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
             ydl.download([query])
     except Exception as e:
+        print( "error: ", e)
         raise ValueError("Song could not be downloaded. Please check your query.")
 
     return file_path + ".mp3"
@@ -51,7 +52,7 @@ def classify(features: dict):
         Args:
             features (dict): extracted features of song
     """
-    X = pd.DataFrame([features])[feature_names].drop(columns=["bpm"])
+    X = pd.DataFrame([features])[feature_names]
     model = joblib.load("models/voting_model_segmented_data.pkl")
     pred = model.predict(X)
     print("Predicted mood:", pred)
@@ -67,7 +68,7 @@ if __name__ == "__main__":
     cut_song_to_30_sec(file_path)
 
     # Extract features
-    y, sr = load_file(file_path)
+    y, sr = load_audio(file_path)
     features = extract_features(y, sr)
 
     # Classify
