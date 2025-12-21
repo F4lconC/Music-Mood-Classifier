@@ -119,5 +119,5 @@ print("Random Forest Accuracy:", f"{acc_rndforest*100:.2f}%")
 print("Voting Accuracy:", f"{acc_voter*100:.2f}%")
 print("Stacker Accuracy:", f"{acc_stacker*100:.2f}%")
 
-joblib.dump(voter, "voting_model_segmented_data.pkl")
-joblib.dump(stacker, "stacking_model_segmented_data.pkl")
+joblib.dump(voter, join("models", "voting_model_segmented_data.pkl"))
+joblib.dump(stacker, join("models", "stacking_model_segmented_data.pkl"))

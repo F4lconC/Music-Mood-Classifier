@@ -24,7 +24,7 @@ songs = df["id"]
 numOfSongs = len(songs)
 count = 1
 
-save_dir = "mel-spectograms"
+save_dir = "mel_spectrograms"
 moods = ["angry", "happy", "relaxed", "sad"]
 
 makedirs(save_dir, exist_ok=True)

@@ -34,7 +34,7 @@ def cut_song_to_30_sec(file_path):
     """
         Takes the file path and creates a 30 second part with the same name and path
     """
-     from pydub import AudioSegment
+    from pydub import AudioSegment
 
     audio = AudioSegment.from_file(file_path)
     duration = len(audio)
@@ -52,7 +52,7 @@ def classify(features: dict):
             features (dict): extracted features of song
     """
     X = pd.DataFrame([features])[feature_names].drop(columns=["bpm"])
-    model = joblib.load("voting_model.pkl")
+    model = joblib.load("models/voting_model_segmented_data.pkl")
     pred = model.predict(X)
     print("Predicted mood:", pred)
 
