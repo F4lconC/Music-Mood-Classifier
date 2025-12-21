@@ -1,5 +1,5 @@
 from os import makedirs
-from os.path import join
+from os.path import abspath, dirname, join
 import re
 
 import cv2
@@ -9,8 +9,10 @@ import pandas as pd
 
 
 def get_mood(id):
-    mood = re.match(r"[a-zA-Z]+", id).group()
-    return mood
+    mood = re.match(r"[a-zA-Z]+", id)
+    if mood:
+        return mood.group()
+    return "unknown"
 
 
 def make_mood_dirs(moods):
@@ -18,14 +20,17 @@ def make_mood_dirs(moods):
         makedirs(join(save_dir, mood), exist_ok=True)
 
 
-df = pd.read_csv("data.csv")
+project_dir = dirname(abspath(join(__file__, "..")))
+
+df = pd.read_csv(join(project_dir, "data.csv"))
 songs = df["id"]
 
 numOfSongs = len(songs)
 count = 1
 
-save_dir = "mel_spectrograms"
-moods = ["angry", "happy", "relaxed", "sad"]
+data_dir = join(project_dir, "data")
+save_dir = join(project_dir, "mel_spectrograms")
+moods = ["angry", "happy", "relaxed", "sad", "unknown"]
 
 makedirs(save_dir, exist_ok=True)
 make_mood_dirs(moods)
@@ -33,7 +38,7 @@ make_mood_dirs(moods)
 for song in songs:
     
     # Load the song file
-    y, sr = librosa.load(join("data", f"{song}.mp3"))
+    y, sr = librosa.load(join(data_dir, f"{song}.mp3"))
 
     # Compute mel-spectogram
     S = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=128, n_fft=2048, hop_length=512)
