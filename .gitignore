@@ -4,3 +4,5 @@ data/
 mel-spectograms/
 tmp/
 venv/
+mel_spectrograms
+mel_spectrograms_segmented/
