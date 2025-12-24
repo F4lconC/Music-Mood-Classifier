@@ -97,13 +97,16 @@ def save_mel_segment(segment, sr, out_path):
     np.save(out_path, mel_db)
 
 
-def audio_to_mel_segments(audio_path, class_name):
+def audio_to_mel_segments(audio_path, class_name=None, out_dir=None):
     y, sr = load_audio(audio_path)
 
     if len(y) < SAMPLES_PER_SEGMENT * NUM_SEGMENTS:
         return
 
-    out_dir = Path(MEL_OUTPUT_DIR) / class_name
+    if class_name is not None:
+        out_dir = Path(MEL_OUTPUT_DIR) / class_name
+    else:
+        out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
     for i in range(NUM_SEGMENTS):
